@@ -3,7 +3,7 @@ A Universal Backend For Old Builds Of Fortnite, This Is The Last One! Aiming To 
 
 ## Fully Supported Builds:
 ### []
-## Build Specific Issues: (Here!)[https://github.com/endlessalpacaYT/Arcane-Backend-V5/BuildSpecificIssues.md]
+## Build Specific Issues: [Here!](https://github.com/endlessalpacaYT/Arcane-Backend-V5/BuildSpecificIssues.md)
 
 ## Project Stack: (Will Most Likely Change)
 - Language: Java
