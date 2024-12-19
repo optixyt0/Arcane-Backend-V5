@@ -1,12 +1,12 @@
 # ArcaneV5
-A Universal Backend For Old Builds Of Fortnite, This Is The Last One! Aiming To Be 1:1!
+ArcaneV5 is created to emulate the full Epic Games backend and its microservices with fortnite as the main focus!
 
 ## Fully Supported Builds:
 ### []
 ## Build Specific Issues: [Here!](https://github.com/endlessalpacaYT/Arcane-Backend-V5/blob/main/BuildSpecificIssues.md)
 
 ## Project Stack: (Will Most Likely Change)
-- Language: Java
+- Language: Javascript, Go
 
 ## Features:
 - [ ] Login system  
