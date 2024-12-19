@@ -11,10 +11,8 @@ ArcaneV5 is created to emulate the full Epic Games backend and its microservices
 ## Project Stack: (Will Most Likely Change)
 - Language: Javascript, Go.
 
-## Features:
-- [ ] Login system  
-- [ ] Easy setup  
-- [ ] Database
+## Features: 
+- [ ] Easy setup
 - [ ] Cloudstorage
 - [ ] Auto shop (purchasing skins and items)  
 - [ ] Full Battle Pass integration  
@@ -29,8 +27,7 @@ ArcaneV5 is created to emulate the full Epic Games backend and its microservices
 - [ ] Party V2 (advanced party system with cross-play)  
 - [ ] Daily rewards system (login rewards)  
 - [ ] Gifting system (send gifts to friends)  
-- [ ] Purchasing from item shop  
-- [ ] HWID Bans (hardware bans)  
+- [ ] Purchasing from item shop
 - [ ] Refunding system  
 - [ ] Frontend for managing backend  
 - [ ] Universal backend (multi-version support)  
@@ -39,7 +36,6 @@ ArcaneV5 is created to emulate the full Epic Games backend and its microservices
 - [ ] Seasonal events (Christmas, Halloween)  
 - [ ] Player stats tracking 
 - [ ] WebSockets for real-time communication
-- [ ] IP Bans (ban based on IP address) 
 - [ ] Private lobbies for custom games  
 - [ ] Cross-platform matchmaking  
 - [ ] Competitive matchmaking and leaderboards  
