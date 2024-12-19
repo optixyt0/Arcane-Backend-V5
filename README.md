@@ -1,6 +1,9 @@
 # ArcaneV5
 ArcaneV5 is created to emulate the full Epic Games backend and its microservices with fortnite as the main focus!
 
+## This backend is split into services
+### If you would like to use a service on another computer simply copy and paste the folder and run npm i on it then node . in the root of the folder
+
 ## Fully Supported Builds:
 ### []
 ## Build Specific Issues: [Here!](https://github.com/endlessalpacaYT/Arcane-Backend-V5/blob/main/BuildSpecificIssues.md)
