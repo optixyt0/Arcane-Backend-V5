@@ -16,6 +16,7 @@ async function startServices() {
     require("./EpicGames/EGSPlatformService/index");
     require("./EpicGames/EmeraldService/index");
     require("./EpicGames/EventsService/index");
+    require("./EpicGames/FN-Content/index");
     require("./EpicGames/FN-Service/index");
     require("./EpicGames/LightswitchService/index");
 }
