@@ -3,6 +3,10 @@ async function catalog(fastify, options) {
         reply.status(200).send(require("../responses/catalog/catalog.json"))
     })
 
+    fastify.get('/catalog/api/shared/bulk/offers', (request, reply) => {
+        reply.status(200).send(require("../responses/catalog/catalog.json"))
+    })
+
     fastify.get('/fortnite/api/storefront/v2/gift/check_eligibility/recipient/:friendId/offer/:offerId', (request, reply) => {
         reply.status(200).send(require("../responses/catalog/giftEligibility.json"))
     })
