@@ -102,9 +102,14 @@ async function calender(fastify, options) {
                             "validFrom": "2023-05-18T22:05:32.216Z",
                             "activeEvents": [
                                 {
-                                    "eventType": "EventFlag.Event_DarkIce",
-                                    "activeUntil": "9998-05-19T00:05:32.216Z",
-                                    "activeSince": "2023-05-18T13:00:00.000Z"
+                                    "eventType": `EventFlag.Season${memory.season}`,
+                                    "activeUntil": "9999-01-01T00:00:00.000Z",
+                                    "activeSince": "2020-01-01T00:00:00.000Z"
+                                },
+                                {
+                                    "eventType": `EventFlag.${memory.lobby}`,
+                                    "activeUntil": "9999-01-01T00:00:00.000Z",
+                                    "activeSince": "2020-01-01T00:00:00.000Z"
                                 }
                             ],
                             "state": {
@@ -112,12 +117,14 @@ async function calender(fastify, options) {
                                 "eventNamedWeights": {},
                                 "activeEvents": [
                                     {
-                                        "instanceId": "5fjc9793egmn7df10ca3m36nug[2]0",
-                                        "devName": "Event_DarkIce",
-                                        "eventName": "CalendarEvent_DarkIce",
-                                        "eventStart": "2023-05-18T13:00:00Z",
-                                        "eventEnd": "9998-05-19T00:05:32.216Z",
-                                        "eventType": "EventFlag.Event_DarkIce"
+                                        "eventType": `EventFlag.Season${memory.season}`,
+                                        "activeUntil": "9999-01-01T00:00:00.000Z",
+                                        "activeSince": "2020-01-01T00:00:00.000Z"
+                                    },
+                                    {
+                                        "eventType": `EventFlag.${memory.lobby}`,
+                                        "activeUntil": "9999-01-01T00:00:00.000Z",
+                                        "activeSince": "2020-01-01T00:00:00.000Z"
                                     }
                                 ],
                                 "seasonNumber": memory.season,
