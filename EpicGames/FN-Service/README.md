@@ -14,5 +14,20 @@
 
 ## Fiddlerscript:
 ```javascript
-// None just set your redirect to port 3551
+import Fiddler;
+
+class Handlers
+{
+    static function OnBeforeRequest(oSession: Session) {
+        if(oSession.fullUrl.Contains("/fortnite/api"))
+        {
+            if (oSession.HTTPMethodIs("CONNECT"))
+            {
+                oSession["x-replywithtunnel"] = "FortniteTunnel";
+                return;
+            }
+            oSession.fullUrl = "http://127.0.0.1:3551" + oSession.PathAndQuery;
+        }
+    }
+}
 ```

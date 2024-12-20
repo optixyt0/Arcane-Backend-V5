@@ -12,7 +12,15 @@ class Handlers
                 return;
             }
             oSession.fullUrl = "http://127.0.0.1:8081" + oSession.PathAndQuery;
-        } 
+        } else if(oSession.fullUrl.Contains("/fortnite/api"))
+        {
+            if (oSession.HTTPMethodIs("CONNECT"))
+            {
+                oSession["x-replywithtunnel"] = "FortniteTunnel";
+                return;
+            }
+            oSession.fullUrl = "http://127.0.0.1:3551" + oSession.PathAndQuery;
+        }
         else if(oSession.fullUrl.Contains("lightswitch"))
         {
             if (oSession.HTTPMethodIs("CONNECT"))
