@@ -4,7 +4,7 @@ function formatMessage(colorCode, label, ...args) {
 }
 
 function backend(...args) {
-    formatMessage(32, "[ACCOUNT-SERVICE]", ...args);  
+    formatMessage(31, "[LIGHTSWITCH-SERVICE]", ...args);  
 }
 
 module.exports = {

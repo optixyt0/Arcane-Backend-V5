@@ -11,6 +11,7 @@ async function startServices() {
                 ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝╚═╝  ╚═══╝╚══════╝  ╚═══╝  ╚══════╝`);
     require("./EpicGames/AccountService/index");
     require("./EpicGames/FN-Service/index");
+    require("./EpicGames/LightswitchService/index");
 }
 
 startServices();
