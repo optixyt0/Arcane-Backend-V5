@@ -13,6 +13,7 @@ async function startServices() {
     require("./EpicGames/ArtifactDeliveryService/index");
     require("./EpicGames/DataAssetDirectoryService/index");
     require("./EpicGames/EGSPlatformService/index");
+    require("./EpicGames/EmeraldService/index");
     require("./EpicGames/FN-Service/index");
     require("./EpicGames/LightswitchService/index");
 }

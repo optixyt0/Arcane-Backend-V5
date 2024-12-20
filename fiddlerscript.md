@@ -53,6 +53,14 @@ class Handlers
                 return;
             }
             oSession.fullUrl = "http://127.0.0.1:8084" + oSession.PathAndQuery;
+        } else if(oSession.fullUrl.Contains("/emerald/"))
+        {
+            if (oSession.HTTPMethodIs("CONNECT"))
+            {
+                oSession["x-replywithtunnel"] = "FortniteTunnel";
+                return;
+            }
+            oSession.fullUrl = "http://127.0.0.1:8085" + oSession.PathAndQuery;
         }
         
         if(oSession.fullUrl.Contains(".ol.epicgames.com"))
