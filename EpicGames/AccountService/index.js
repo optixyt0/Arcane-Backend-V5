@@ -14,9 +14,9 @@ const IP = "0.0.0.0";
 
 fastify.register(formbody);
 
-fs.readdirSync(path.join(__dirname, "routes")).forEach(fileName => {
+fs.readdirSync(path.join(__dirname, "./routes")).forEach(fileName => {
     try {
-        fastify.register(require(path.join(__dirname, "routes", fileName)));
+        fastify.register(require(path.join(__dirname, "./routes", fileName)));
     } catch (err) {
         console.error(`Error Registering Route: ${fileName}, Error: ` + err);
     }
