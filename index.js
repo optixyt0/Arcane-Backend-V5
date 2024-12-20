@@ -10,6 +10,8 @@ async function startServices() {
                 ██║  ██║██║  ██║╚██████╗██║  ██║██║ ╚████║███████╗ ╚████╔╝ ███████║
                 ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝╚═╝  ╚═══╝╚══════╝  ╚═══╝  ╚══════╝`);
     require("./EpicGames/AccountService/index");
+    require("./EpicGames/ArtifactDeliveryService/index");
+    require("./EpicGames/DataAssetDirectoryService/index");
     require("./EpicGames/FN-Service/index");
     require("./EpicGames/LightswitchService/index");
 }
