@@ -11,37 +11,6 @@ ArcaneV5 is created to emulate the full Epic Games backend and its microservices
 ## Project Stack: (Will Most Likely Change)
 - Language: Javascript, Go.
 
-## Features: 
-- [ ] Easy setup
-- [ ] Cloudstorage
-- [ ] Auto shop (purchasing skins and items)  
-- [ ] Full Battle Pass integration  
-- [ ] Challenges system (daily and weekly challenges)  
-- [ ] Friends system (add/remove/block friends) 
-- [ ] XMPP
-- [ ] Working MCP
-- [ ] NewsV1 (Fortnite in-game news system) 
-- [ ] NewsV2 (Fortnite in-game news system)
-- [ ] Matchmaker (matchmaking system)  
-- [ ] Party V1 (basic party system)  
-- [ ] Party V2 (advanced party system with cross-play)  
-- [ ] Daily rewards system (login rewards)  
-- [ ] Gifting system (send gifts to friends)  
-- [ ] Purchasing from item shop
-- [ ] Refunding system  
-- [ ] Frontend for managing backend  
-- [ ] Universal backend (multi-version support)  
-- [ ] API for external integrations  
-- [ ] Player inventory management  
-- [ ] Seasonal events (Christmas, Halloween)  
-- [ ] Player stats tracking 
-- [ ] WebSockets for real-time communication
-- [ ] Private lobbies for custom games  
-- [ ] Cross-platform matchmaking  
-- [ ] Competitive matchmaking and leaderboards  
-- [ ] Tournament support
-- [ ] Save The World
-
 ## Contributing Guide
 
 ### All Contributions Are Reviewed!  

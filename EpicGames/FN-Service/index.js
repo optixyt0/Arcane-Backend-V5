@@ -9,7 +9,7 @@ const errors = require("./responses/errors.json");
 const createError = require("./utils/error.js");
 const logger = require("./utils/logger.js");
 
-const PORT = 8081;
+const PORT = 3551;
 const IP = "0.0.0.0";
 
 fastify.register(formbody);
@@ -34,24 +34,13 @@ fastify.setErrorHandler((error, request, reply) => {
     createError.createError(errors.SERVER_ERROR.common, 500, reply);
 });
 
-/*async function connectMongo() {
-    const uri = process.env.MONGODB + "/ArcaneV5_AccountService";
-    try {
-        mongoose.connect(uri);
-        logger.backend(`Successfully connected to MongoDB: ${uri}`);
-    } catch (err) {
-        console.error(err);
-    }
-}*/
-
 async function startBackend() {
     fastify.listen({ port: PORT, host: IP }, (err, address) => {
         if (err) {
             console.error(err);
             process.exit(1);
         }
-        logger.backend(`AccountService Running On ${address}`);
-        //connectMongo();
+        logger.backend(`FN-Service Running On ${address}`);
     });
 }
 
