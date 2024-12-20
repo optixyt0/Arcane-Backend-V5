@@ -1,14 +1,8 @@
 # AccountService
 ## This handles the accounts and authentication
 # Hosts:
-- account-public-service-prod.ol.epicgames.com
-- account-public-service-prod03.ol.epicgames.com
-
-## Features:
-- [ ] Authentication
-- [ ] Database
-- [ ] HWID Bans (hardware bans)  
-- [ ] IP Bans (ban based on IP address) 
+- lightswitch-public-service-prod.ol.epicgames.com
+- lightswitch-public-service-prod06.ol.epicgames.com
 
 ## Fiddlerscript:
 ```javascript
@@ -17,14 +11,14 @@ import Fiddler;
 class Handlers
 {
     static function OnBeforeRequest(oSession: Session) {
-        if (oSession.fullUrl.Contains("/account/api"))
+        if(oSession.fullUrl.Contains("lightswitch"))
         {
             if (oSession.HTTPMethodIs("CONNECT"))
             {
                 oSession["x-replywithtunnel"] = "FortniteTunnel";
                 return;
             }
-            oSession.fullUrl = "http://127.0.0.1:8081" + oSession.PathAndQuery;
+            oSession.fullUrl = "http://127.0.0.1:3552" + oSession.PathAndQuery;
         }
     }
 }
