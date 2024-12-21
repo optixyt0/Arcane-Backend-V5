@@ -13,6 +13,7 @@ class Handlers {
             "/api/v1/assets/": 8083,
             "artifact-delivery": 8082,
             "/account/api": 8081,
+            "/api/v1/fortnite-br/": 5006,
             "nelly-service": 5005,
             "/links/api/": 5004,
             "/library/api/": 5003,

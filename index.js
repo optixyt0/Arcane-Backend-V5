@@ -32,6 +32,7 @@ async function startServices() {
     require("./EpicGames/LightswitchService/index");
     require("./EpicGames/LinksService/index");
     require("./EpicGames/NellyService/index");
+    require("./EpicGames/PRMDialogService/index");
 }
 
 startServices();
