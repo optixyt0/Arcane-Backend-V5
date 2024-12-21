@@ -27,6 +27,7 @@ async function startServices() {
     require("./EpicGames/GlobalService/index");
     require("./EpicGames/IPDataService/index");
     require("./EpicGames/KWS/index");
+    require("./EpicGames/LauncherService/index");
     require("./EpicGames/LightswitchService/index");
 }
 

@@ -13,6 +13,7 @@ class Handlers {
             "/api/v1/assets/": 8083,
             "artifact-delivery": 8082,
             "/account/api": 8081,
+            "/launcher/api": 5002,
             "api.kws.ol": 5001,
             "/fortnite/api": 3551,
             "lightswitch": 3552,
