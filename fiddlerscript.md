@@ -4,6 +4,7 @@ import Fiddler;
 class Handlers {
     static function OnBeforeRequest(oSession: Session) {
         var routingTable = {
+            "ip-data-service": 8089,
             "global-profile-service": 8088,
             "/fulfillment/api/": 8087,
             "/friends/api/": 8086,

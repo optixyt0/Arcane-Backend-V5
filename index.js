@@ -24,6 +24,8 @@ async function startServices() {
     require("./EpicGames/FN-Service/index");
     require("./EpicGames/FriendsService/index");
     require("./EpicGames/FulfillmentService/index");
+    require("./EpicGames/GlobalService/index");
+    require("./EpicGames/IPDataService/index");
     require("./EpicGames/LightswitchService/index");
 }
 
