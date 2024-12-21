@@ -17,7 +17,13 @@ async function startServices() {
     require("./EpicGames/EmeraldService/index");
     require("./EpicGames/EventsService/index");
     require("./EpicGames/FN-Content/index");
+    require("./EpicGames/FN-Discovery-Search-Service/index");
+    require("./EpicGames/FN-Discovery-Service/index");
+    require("./EpicGames/FN-Habanero-Service/index");
+    require("./EpicGames/FN-Hotconfig/index");
     require("./EpicGames/FN-Service/index");
+    require("./EpicGames/FriendsService/index");
+    require("./EpicGames/FulfillmentService/index");
     require("./EpicGames/LightswitchService/index");
 }
 

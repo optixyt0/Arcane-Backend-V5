@@ -1,91 +1,39 @@
 ```javascript
 import Fiddler;
 
-class Handlers
-{
+class Handlers {
     static function OnBeforeRequest(oSession: Session) {
-        if (oSession.fullUrl.Contains("/account/api"))
-        {
-            if (oSession.HTTPMethodIs("CONNECT"))
-            {
-                oSession["x-replywithtunnel"] = "FortniteTunnel";
-                return;
-            }
-            oSession.fullUrl = "http://127.0.0.1:8081" + oSession.PathAndQuery;
-        } else if(oSession.fullUrl.Contains("/fortnite/api"))
-        {
-            if (oSession.HTTPMethodIs("CONNECT"))
-            {
-                oSession["x-replywithtunnel"] = "FortniteTunnel";
-                return;
-            }
-            oSession.fullUrl = "http://127.0.0.1:3551" + oSession.PathAndQuery;
-        } else if(oSession.fullUrl.Contains("lightswitch"))
-        {
-            if (oSession.HTTPMethodIs("CONNECT"))
-            {
-                oSession["x-replywithtunnel"] = "FortniteTunnel";
-                return;
-            }
-            oSession.fullUrl = "http://127.0.0.1:3552" + oSession.PathAndQuery;
-        } else if(oSession.fullUrl.Contains("/caldera/"))
-        {
-            if (oSession.HTTPMethodIs("CONNECT"))
-            {
-                oSession["x-replywithtunnel"] = "FortniteTunnel";
-                return;
-            }
-            oSession.fullUrl = "http://127.0.0.1:3553" + oSession.PathAndQuery;
-        } else if(oSession.fullUrl.Contains("events-public-service-live"))
-        {
-            if (oSession.HTTPMethodIs("CONNECT"))
-            {
-                oSession["x-replywithtunnel"] = "FortniteTunnel";
-                return;
-            }
-            oSession.fullUrl = "http://127.0.0.1:3554" + oSession.PathAndQuery;
-        } else if(oSession.fullUrl.Contains("artifact-delivery"))
-        {
-            if (oSession.HTTPMethodIs("CONNECT"))
-            {
-                oSession["x-replywithtunnel"] = "FortniteTunnel";
-                return;
-            }
-            oSession.fullUrl = "http://127.0.0.1:8082" + oSession.PathAndQuery;
-        } else if(oSession.fullUrl.Contains("/api/v1/assets/"))
-        {
-            if (oSession.HTTPMethodIs("CONNECT"))
-            {
-                oSession["x-replywithtunnel"] = "FortniteTunnel";
-                return;
-            }
-            oSession.fullUrl = "http://127.0.0.1:8083" + oSession.PathAndQuery;
-        } else if(oSession.fullUrl.Contains("/egs/"))
-        {
-            if (oSession.HTTPMethodIs("CONNECT"))
-            {
-                oSession["x-replywithtunnel"] = "FortniteTunnel";
-                return;
-            }
-            oSession.fullUrl = "http://127.0.0.1:8084" + oSession.PathAndQuery;
-        } else if(oSession.fullUrl.Contains("/emerald/"))
-        {
-            if (oSession.HTTPMethodIs("CONNECT"))
-            {
-                oSession["x-replywithtunnel"] = "FortniteTunnel";
-                return;
-            }
-            oSession.fullUrl = "http://127.0.0.1:8085" + oSession.PathAndQuery;
+        var routingTable = {
+            "global-profile-service": 8088,
+            "/fulfillment/api/": 8087,
+            "/friends/api/": 8086,
+            "/emerald/": 8085,
+            "/egs/": 8084,
+            "/api/v1/assets/": 8083,
+            "artifact-delivery": 8082,
+            "/account/api": 8081,
+            "/fortnite/api": 3551,
+            "lightswitch": 3552,
+            "/caldera/": 3553,
+            "events-public-service-live": 3554,
+            "/content/api": 3555,
+            "fn-service-discovery-search-live": 3556,
+            "fn-service-discovery-live": 3557,
+            "habanero": 3558,
+            "/hotconfigs/v2": 3559,
+            ".ol.epicgames.com": 3551
+        };
+
+        if (oSession.HTTPMethodIs("CONNECT")) {
+            oSession["x-replywithtunnel"] = "EpicTunnel";
+            return;
         }
-        
-        if(oSession.fullUrl.Contains(".ol.epicgames.com"))
-        {
-            if (oSession.HTTPMethodIs("CONNECT"))
-            {
-                oSession["x-replywithtunnel"] = "FortniteTunnel";
+
+        for (var pattern in routingTable) {
+            if (oSession.fullUrl.Contains(pattern)) {
+                oSession.fullUrl = "http://127.0.0.1:" + routingTable[pattern] + oSession.PathAndQuery;
                 return;
             }
-            oSession.fullUrl = "http://127.0.0.1:3551" + oSession.PathAndQuery;
         }
     }
 }
