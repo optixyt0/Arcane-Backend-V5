@@ -33,6 +33,12 @@ async function startServices() {
     require("./EpicGames/LinksService/index");
     require("./EpicGames/NellyService/index");
     require("./EpicGames/PRMDialogService/index");
+    require("./EpicGames/PersonaService/index");
+    require("./EpicGames/StatsProxyService/index");
+    require("./EpicGames/TagManagementService/index");
+    require("./EpicGames/UserSearchService/index");
+    require("./EpicGames/WaspService/index");
+    require("./EpicGames/Web/index");
 }
 
 startServices();
