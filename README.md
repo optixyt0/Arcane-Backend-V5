@@ -2,7 +2,6 @@
 ArcaneV5 is created to emulate the full Epic Games backend and its microservices with fortnite as the main focus!
 
 ## This backend is split into services
-### If you would like to use a service on another computer simply run the install.bat from this then copy the node_modules folder into the service root folder that you want to use then just copy the start.bat into the service root folder then run it!
 
 ## Fully Supported Builds:
 ### []
@@ -26,3 +25,6 @@ We welcome contributions but ask that you follow these guidelines:
 - Respect the Learning Process: Keep changes manageable and easy to review to help keep the project maintainable.
 
 Thank you for contributing to the project!
+
+## Credits
+- LeleDerGrasshalmi for the endpoints doc [Link.](https://github.com/LeleDerGrasshalmi/FortniteEndpointsDocumentation)

@@ -1,5 +1,15 @@
 {
     "BAD_REQUEST": {
+        "common": {
+            "errorCode": "errors.com.epicgames.common.bad_request",
+            "errorMessage": "Sorry, The required fields were not sent with the request!",
+            "messageVars": [],
+            "numericErrorCode": 4001,
+            "originatingService": "com.epicgames.account.public",
+            "intent": "prod",
+            "error_description": "Sorry, The required fields were not sent with the request!",
+            "error": "BAD_REQUEST!"
+        },
         "account": {
             "account_already_exists": {
                 "errorCode": "errors.com.epicgames.account.account_already_exists",

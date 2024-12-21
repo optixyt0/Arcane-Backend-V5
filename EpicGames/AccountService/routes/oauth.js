@@ -1,9 +1,15 @@
+const User = require("../../../global/database/models/user");
 const { v4: uuidv4 } = require("uuid");
+const bcrypt = require("bcrypt");
+
+const errors = require("../../../global/responses/errors.json");
+const createError = require("../../../global/utils/error.js");
 
 async function oauth(fastify, options) {
     fastify.post('/account/api/oauth/token', (request, reply) => {
         const { grant_type } = request.body;
         if (grant_type == "password") {
+            const { username, password } = request.body;
             reply.status(200).send({
                 "access_token": "eg1~ArcaneV5",
                 "expires_in": 7200,

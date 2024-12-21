@@ -5,9 +5,10 @@ const fs = require("fs");
 const path = require("path");
 require("dotenv").config();
 
-const errors = require("./responses/errors.json");
-const createError = require("./utils/error.js");
+const errors = require("../../global/responses/errors.json");
+const createError = require("../../global/utils/error.js");
 const logger = require("./utils/logger.js");
+const connectMongo = require("../../global/database/connect.js");
 
 const PORT = 8081;
 const IP = "0.0.0.0";
@@ -34,16 +35,6 @@ fastify.setErrorHandler((error, request, reply) => {
     createError.createError(errors.SERVER_ERROR.common, 500, reply);
 });
 
-/*async function connectMongo() {
-    const uri = process.env.MONGODB + "/ArcaneV5_AccountService";
-    try {
-        mongoose.connect(uri);
-        logger.backend(`Successfully connected to MongoDB: ${uri}`);
-    } catch (err) {
-        console.error(err);
-    }
-}*/
-
 async function startBackend() {
     fastify.listen({ port: PORT, host: IP }, (err, address) => {
         if (err) {
@@ -51,7 +42,7 @@ async function startBackend() {
             process.exit(1);
         }
         logger.backend(`AccountService Running On ${address}`);
-        //connectMongo();
+        connectMongo();
     });
 }
 

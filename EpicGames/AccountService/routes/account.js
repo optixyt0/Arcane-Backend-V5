@@ -1,3 +1,10 @@
+const User = require("../../../global/database/models/user");
+const { v4: uuidv4 } = require("uuid");
+const bcrypt = require("bcrypt");
+
+const errors = require("../../../global/responses/errors.json");
+const createError = require("../../../global/utils/error.js");
+
 async function account(fastify, options) {
     // Category: Uncategorized
     fastify.get('/account/api/public/account/ageGate', (request, reply) => {
@@ -6,31 +13,36 @@ async function account(fastify, options) {
         })
     })
 
-    fastify.post('/account/api/public/account', (request, reply) => {
-        reply.status(200).send({
-            "accountInfo": {
-                "id": "ArcaneV5",
-                "displayName": "ArcaneV5",
-                "name": "Arcane",
-                "email": "developer@arcane.dev",
-                "failedLoginAttempts": 0,
-                "numberOfDisplayNameChanges": 0,
-                "ageGroup": "UNKNOWN",
-                "headless": false,
-                "country": "EN-GB",
-                "lastName": "Backend",
-                "phoneNumber": "0123456789",
-                "company": "Arcane Backend",
-                "preferredLanguage": "en-gb",
-                "canUpdateDisplayName": true,
-                "tfaEnabled": false,
-                "emailVerified": false,
-                "minorVerified": false,
-                "minorExpected": false,
-                "minorStatus": "NOT_MINOR",
-                "cabinedMode": false,
-                "hasHashedEmail": false
+    // Route for creating a user
+    fastify.post('/account/api/public/account', async (request, reply) => {
+        const { authenticate, tokenType, sendEmail } = request.query;
+        const { name, lastName, preferredLanguage, displayName, phoneNumber, company, email, username, password, dateOfBirth } = request.body;
+        if (!displayName || !email || !password) {
+            return createError.createError(errors.BAD_REQUEST.common, 400, reply);
+        }
+
+        const existingUser = await User.findOne({ email: email });
+        if (existingUser) {
+            return createError.createError(errors.BAD_REQUEST.account.account_already_exists, 400, reply);
+        }
+        const hashedPass = await bcrypt.hash(password, 10);
+        const accountId = uuidv4();
+
+        const newUser = new User({
+            accountInfo: {
+                id: accountId,
+                displayName: displayName,
+                email: email,
+                company: company ? company : displayName
+            },
+            security: {
+                password: hashedPass
             }
+        });
+        await newUser.save();
+        const user = await User.findOne({ 'accountInfo.id': accountId });
+        reply.status(200).send({
+            "accountInfo": user.accountInfo
         })
     })
 
