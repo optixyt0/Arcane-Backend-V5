@@ -1,16 +1,5 @@
 const mongoose = require('mongoose');
 
-/*const newUser = new User({
-    accountInfo: {
-        id: "ArcaneV5",
-        displayName: "ArcaneV5",
-        email: "developer@arcane.dev"
-    },
-    security: {
-        password: "password"
-    }
-});*/
-
 const UserSchema = new mongoose.Schema({
     accountInfo: {
         id: { type: String, required: true },
@@ -45,6 +34,10 @@ const UserSchema = new mongoose.Schema({
     metadata: {
         type: Map,
         of: String,
+        default: {},
+    },
+    stash: {
+        type: Object,
         default: {},
     },
     receipts: { type: Array, default: [] },

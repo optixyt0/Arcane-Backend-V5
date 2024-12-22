@@ -1,6 +1,9 @@
 const User = require("../../database/models/user.js");
+const Profile = require("../../database/models/profile.js");
 const { v4: uuidv4 } = require("uuid");
 const bcrypt = require("bcrypt");
+const fs = require("fs");
+const path = require("path");
 
 const errors = require("../../responses/errors.json");
 const createError = require("../../utils/error.js");
@@ -13,6 +16,30 @@ async function account(fastify, options) {
             "ageGateRequired": true
         })
     })
+
+    async function createProfile(accountId) {
+        let profiles = {};
+
+        fs.readdirSync(path.join(__dirname, "..", "..", "responses", "fortniteConfig", "DefaultProfiles")).forEach(fileName => {
+            const profile = require(path.join(__dirname, "..", "..", "responses", "fortniteConfig", "DefaultProfiles", fileName));
+
+            profile.accountId = accountId;
+            profile.created = new Date().toISOString();
+            profile.updated = new Date().toISOString();
+
+            profiles[profile.profileId] = profile;
+        });
+
+        const profileData = {
+            created: new Date(),
+            accountId: accountId,
+            profiles: profiles
+        };
+
+        const profile = new Profile(profileData);
+        await profile.save();
+        return profile;
+    }
 
     // Route for creating a user
     fastify.post('/account/api/public/account', async (request, reply) => {
@@ -41,9 +68,13 @@ async function account(fastify, options) {
             },
             privacySettings: {
                 accountId: accountId
+            },
+            stash: {
+                "globalcash": 0
             }
         });
         await newUser.save();
+        createProfile(accountId);
         const user = await User.findOne({ 'accountInfo.id': accountId });
         reply.status(200).send({
             "accountInfo": user.accountInfo
@@ -241,7 +272,7 @@ async function account(fastify, options) {
         if (!user) {
             return createError.createError(errors.NOT_FOUND.account.not_found, 404, reply);
         }
-        
+
         reply.status(200).send(user.accountInfo)
     })
 
@@ -252,7 +283,7 @@ async function account(fastify, options) {
         if (!user) {
             return createError.createError(errors.NOT_FOUND.account.not_found, 404, reply);
         }
-        
+
         reply.status(200).send([
             {
                 "id": user.accountInfo.id,
@@ -267,7 +298,7 @@ async function account(fastify, options) {
         if (!user) {
             return createError.createError(errors.NOT_FOUND.account.not_found, 404, reply);
         }
-        
+
         reply.status(200).send({
             "id": user.accountInfo.id,
             "displayName": user.accountInfo.displayName,
@@ -280,7 +311,7 @@ async function account(fastify, options) {
         if (!user) {
             return createError.createError(errors.NOT_FOUND.account.not_found, 404, reply);
         }
-        
+
         reply.status(200).send({
             "id": user.accountInfo.id,
             "displayName": user.accountInfo.displayName,
@@ -299,7 +330,7 @@ async function account(fastify, options) {
         }
         user.metadata.delete(request.params.key);
         await user.save();
-        
+
         reply.status(204).send();
     })
 
@@ -327,7 +358,7 @@ async function account(fastify, options) {
     // Set a metadate key
     fastify.post('/account/api/accounts/:accountId/metadata', { preHandler: tokenVerify }, async (request, reply) => {
         const { key, value } = request.body;
-        
+
         const accountId = request.user.account_id
         const user = await User.findOne({ 'accountInfo.id': accountId });
         if (!user) {
