@@ -18,11 +18,11 @@ async function stw(fastify, options) {
     })
 
     fastify.get('/fortnite/api/game/v2/world/info', (request, reply) => {
-        reply.status(200).send(require("../responses/stw/worldinfo.json"))
+        reply.status(200).send(require("../../responses/fortniteConfig/stw/worldinfo.json"))
     })
 
     fastify.post('/fortnite/api/game/v2/world/validate', (request, reply) => {
-        reply.status(200).send(require("../responses/stw/worldinfo.json"))
+        reply.status(200).send(require("../../responses/fortniteConfig/stw/worldinfo.json"))
     })
 }
 
