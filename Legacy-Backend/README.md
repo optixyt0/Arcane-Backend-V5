@@ -1,7 +1,7 @@
 # ArcaneV5
 ArcaneV5 is created to emulate the full Epic Games backend and its microservices with fortnite as the main focus!
 
-## [Changelog!](https://github.com/endlessalpacaYT/Arcane-Backend-V5/blob/main/changelog.md)
+## This backend is split into services
 
 ## Fully Supported Builds:
 ### []
@@ -27,4 +27,4 @@ We welcome contributions but ask that you follow these guidelines:
 Thank you for contributing to the project!
 
 ## Credits
-- LeleDerGrasshalmi for the endpoints doc [Link!](https://github.com/LeleDerGrasshalmi/FortniteEndpointsDocumentation)
+- LeleDerGrasshalmi for the endpoints doc [Link.](https://github.com/LeleDerGrasshalmi/FortniteEndpointsDocumentation)

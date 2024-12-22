@@ -1,44 +1,69 @@
-// Will only start services coded in javascript!
-/* If you would like to use a service on another computer simply copy and paste the folder
-   and run npm i on it then node . in the root of the folder*/
-async function startServices() {
-    console.log(`
-                 █████╗ ██████╗  ██████╗ █████╗ ███╗   ██╗███████╗██╗   ██╗███████╗
-                ██╔══██╗██╔══██╗██╔════╝██╔══██╗████╗  ██║██╔════╝██║   ██║██╔════╝
-                ███████║██████╔╝██║     ███████║██╔██╗ ██║█████╗  ██║   ██║███████╗
-                ██╔══██║██╔══██╗██║     ██╔══██║██║╚██╗██║██╔══╝  ╚██╗ ██╔╝╚════██║
-                ██║  ██║██║  ██║╚██████╗██║  ██║██║ ╚████║███████╗ ╚████╔╝ ███████║
-                ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝╚═╝  ╚═══╝╚══════╝  ╚═══╝  ╚══════╝`);
-    require("./EpicGames/AccountService/index");
-    require("./EpicGames/ArtifactDeliveryService/index");
-    require("./EpicGames/CalderaService/index");
-    require("./EpicGames/DataAssetDirectoryService/index");
-    require("./EpicGames/EGSPlatformService/index");
-    require("./EpicGames/EmeraldService/index");
-    require("./EpicGames/EventsService/index");
-    require("./EpicGames/FN-Content/index");
-    require("./EpicGames/FN-Discovery-Search-Service/index");
-    require("./EpicGames/FN-Discovery-Service/index");
-    require("./EpicGames/FN-Habanero-Service/index");
-    require("./EpicGames/FN-Hotconfig/index");
-    require("./EpicGames/FN-Service/index");
-    require("./EpicGames/FriendsService/index");
-    require("./EpicGames/FulfillmentService/index");
-    require("./EpicGames/GlobalService/index");
-    require("./EpicGames/IPDataService/index");
-    require("./EpicGames/KWS/index");
-    require("./EpicGames/LauncherService/index");
-    require("./EpicGames/LibraryService/index");
-    require("./EpicGames/LightswitchService/index");
-    require("./EpicGames/LinksService/index");
-    require("./EpicGames/NellyService/index");
-    require("./EpicGames/PRMDialogService/index");
-    require("./EpicGames/PersonaService/index");
-    require("./EpicGames/StatsProxyService/index");
-    require("./EpicGames/TagManagementService/index");
-    require("./EpicGames/UserSearchService/index");
-    require("./EpicGames/WaspService/index");
-    require("./EpicGames/Web/index");
+const fastify = require('fastify')();
+const formbody = require('@fastify/formbody');
+const mongoose = require("mongoose");
+const fs = require("fs");
+const path = require("path");
+require("dotenv").config();
+
+const errors = require("./responses/errors.json");
+const createError = require("./utils/error.js");
+const logger = require("./utils/logger.js");
+const connectMongo = require("./database/connect.js");
+
+const PORT = 3551;
+const IP = "0.0.0.0";
+
+fastify.register(formbody);
+
+fs.readdirSync(path.join(__dirname, "./routes")).forEach(fileName => {
+    const filePath = path.join(__dirname, "./routes", fileName);
+    const stat = fs.statSync(filePath);
+    if (stat.isDirectory()) {
+        fs.readdirSync(filePath).forEach(subFile => {
+            const subFilePath = path.join(filePath, subFile);
+            if (subFile.endsWith('.js')) {
+                try {
+                    fastify.register(require(subFilePath));
+                } catch (err) {
+                    console.error(`Error Registering Route: ${subFilePath}, Error: ` + err);
+                }
+            }
+        });
+    } else if (fileName.endsWith('.js')) {
+        try {
+            fastify.register(require(filePath));
+        } catch (err) {
+            console.error(`Error Registering Route: ${filePath}, Error: ` + err);
+        }
+    }
+});
+
+fastify.setNotFoundHandler((request, reply) => {
+    logger.backend(`[${new Date().toISOString()}] 404 Not Found - ${request.method} ${request.url}`);
+    createError.createError(errors.NOT_FOUND.common, 404, reply);
+});
+
+fastify.setErrorHandler((error, request, reply) => {
+    console.error(error);
+    createError.createError(errors.SERVER_ERROR.common, 500, reply);
+});
+
+async function startBackend() {
+    fastify.listen({ port: PORT, host: IP }, (err, address) => {
+        if (err) {
+            console.error(err);
+            process.exit(1);
+        }
+        console.log(`
+            █████╗ ██████╗  ██████╗ █████╗ ███╗   ██╗███████╗██╗   ██╗███████╗
+           ██╔══██╗██╔══██╗██╔════╝██╔══██╗████╗  ██║██╔════╝██║   ██║██╔════╝
+           ███████║██████╔╝██║     ███████║██╔██╗ ██║█████╗  ██║   ██║███████╗
+           ██╔══██║██╔══██╗██║     ██╔══██║██║╚██╗██║██╔══╝  ╚██╗ ██╔╝╚════██║
+           ██║  ██║██║  ██║╚██████╗██║  ██║██║ ╚████║███████╗ ╚████╔╝ ███████║
+           ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝╚═╝  ╚═══╝╚══════╝  ╚═══╝  ╚══════╝`);
+        logger.backend(`ArcaneV5 Running On ${address}`);
+        connectMongo();
+    });
 }
 
-startServices();
+startBackend();
