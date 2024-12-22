@@ -101,17 +101,7 @@ async function account(fastify, options) {
 
     // Create Device Auth
     fastify.post('/account/api/public/account/:accountId/deviceAuth', (request, reply) => {
-        reply.status(200).send({
-            "deviceId": "435b52ece6d347479531c5132e209e53",
-            "accountId": "ArcaneV5",
-            "secret": "ArcaneV5",
-            "userAgent": "",
-            "created": {
-                "location": "United Kingdom",
-                "ipAddress": "127.0.0.1",
-                "dateTime": new Date().toISOString()
-            }
-        })
+        reply.status(200).send({})
     })
 
     // Delete Device Auth
@@ -184,25 +174,22 @@ async function account(fastify, options) {
     })
 
     // info
-    fastify.get('/account/api/public/account/:accountId/externalAuths/:externalAuthType', (request, reply) => {
-        reply.status(200).send({
-            "accountId": "ArcaneV5",
-            "type": "Arcane",
-            "externalAuthId": "ArcaneV5",
-            "externalAuthIdType": "arcane_login",
-            "externalDisplayName": "Arcane",
-            "authIds": [
-                {
-                    "id": "ArcaneV5",
-                    "type": "arcane_login"
-                }
-            ],
-            "dateAdded": new Date().toISOString()
-        })
+    fastify.get('/account/api/public/account/:accountId/externalAuths/:externalAuthType', { preHandler: tokenVerify }, async (request, reply) => {
+        const user = await User.findOne({ 'accountInfo.id': request.params.accountId });
+        if (!user) {
+            return createError.createError(errors.NOT_FOUND.account.not_found, 404, reply);
+        }
+
+        reply.status(200).send(user.externalAuths);
     })
 
-    fastify.get('/account/api/public/account/:accountId/externalAuths', (request, reply) => {
-        reply.status(200).send([])
+    fastify.get('/account/api/public/account/:accountId/externalAuths', { preHandler: tokenVerify }, async (request, reply) => {
+        const user = await User.findOne({ 'accountInfo.id': request.params.accountId });
+        if (!user) {
+            return createError.createError(errors.NOT_FOUND.account.not_found, 404, reply);
+        }
+
+        reply.status(200).send(user.externalAuths);
     })
 
     // Category: Lookup
@@ -302,21 +289,51 @@ async function account(fastify, options) {
     // Category: Metadata
 
     // Delete metadate key Route
-    fastify.delete('/account/api/accounts/:accountId/metadata/:key', (request, reply) => {
+    fastify.delete('/account/api/accounts/:accountId/metadata/:key', { preHandler: verifyToken }, async (request, reply) => {
+        const accountId = request.user.account_id
+        const user = await User.findOne({ 'accountInfo.id': accountId });
+        if (!user) {
+            return createError.createError(errors.NOT_FOUND.account.not_found, 404, reply);
+        }
+        user.metadata.delete(request.params.key);
+        await user.save();
+        
         reply.status(204).send();
     })
 
-    fastify.get('/account/api/accounts/:accountId/metadata', (request, reply) => {
-        reply.status(200).send({})
+    fastify.get('/account/api/accounts/:accountId/metadata', { preHandler: verifyToken }, async (request, reply) => {
+        const accountId = request.user.account_id
+        const user = await User.findOne({ 'accountInfo.id': accountId });
+        if (!user) {
+            return createError.createError(errors.NOT_FOUND.account.not_found, 404, reply);
+        }
+
+        reply.status(200).send(user.metadata)
     })
 
     // Get specific metadata key
-    fastify.get('/account/api/accounts/:accountId/metadata/:key', (request, reply) => {
-        reply.status(200).send();
+    fastify.get('/account/api/accounts/:accountId/metadata/:key', { preHandler: verifyToken }, async (request, reply) => {
+        const accountId = request.user.account_id
+        const user = await User.findOne({ 'accountInfo.id': accountId });
+        if (!user) {
+            return createError.createError(errors.NOT_FOUND.account.not_found, 404, reply);
+        }
+
+        reply.status(200).send(user.metadata.get(request.params.key));
     })
 
     // Set a metadate key
-    fastify.post('/account/api/accounts/:accountId/metadata', (request, reply) => {
+    fastify.post('/account/api/accounts/:accountId/metadata', { preHandler: verifyToken }, async (request, reply) => {
+        const { key, value } = request.body;
+        
+        const accountId = request.user.account_id
+        const user = await User.findOne({ 'accountInfo.id': accountId });
+        if (!user) {
+            return createError.createError(errors.NOT_FOUND.account.not_found, 404, reply);
+        }
+        user.metadata.set(key, value);
+        await user.save();
+
         reply.status(204).send();
     })
 }

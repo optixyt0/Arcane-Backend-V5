@@ -11,6 +11,9 @@ const logger = require("../utils/logger.js");
 async function oauth(fastify, options) {
     fastify.post('/account/api/oauth/token', async (request, reply) => {
         const { grant_type } = request.body;
+        if (!grant_type) {
+            return createError.createError(errors.BAD_REQUEST.common, 400, reply);
+        }
         let client_id;
 
         try {
@@ -24,6 +27,9 @@ async function oauth(fastify, options) {
         }
         if (grant_type == "password") {
             const { username, password, includePerms, token_type } = request.body;
+            if (!username || !password) {
+                return createError.createError(errors.BAD_REQUEST.common, 400, reply);
+            }
 
             const user = await User.findOne({ "accountInfo.email": username });
             if (!user) {
@@ -63,7 +69,7 @@ async function oauth(fastify, options) {
             }, process.env.JWT_SECRET, { expiresIn: "8h" })
 
             let response = {
-                "access_token": `${token_type}~${access_token}` || access_token,
+                "access_token": token_type ? `${token_type}~${access_token}` : access_token,
                 "expires_in": 7200,
                 "expires_at": new Date(Date.now() + 7200 * 1000).toISOString(),
                 "token_type": "bearer",
@@ -107,7 +113,7 @@ async function oauth(fastify, options) {
             }, process.env.JWT_SECRET, { expiresIn: "4h" })
 
             reply.status(200).send({
-                "access_token": `${token_type}~${access_token}` || access_token,
+                "access_token": token_type ? `${token_type}~${access_token}` : access_token,
                 "expires_in": 14400,
                 "expires_at": new Date(Date.now() + 14400 * 1000).toISOString(),
                 "token_type": "bearer",

@@ -37,7 +37,13 @@ const UserSchema = new mongoose.Schema({
     },
     security: {
         password: { type: String, required: true },
-    }
+    },
+    metadata: {
+        type: Map,
+        of: String,
+        default: {},
+    },
+    externalAuths: { type: Array, default: [] }
 });
 
 module.exports = mongoose.model('users', UserSchema);

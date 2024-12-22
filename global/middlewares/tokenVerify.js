@@ -11,12 +11,12 @@ async function verifyToken(request, reply) {
         if (!authorization) {
             return createError.createError(errors.NOT_ALLOWED.common, 403, reply);
         }
-        const token = authorization.replace("bearer ", "").trim();
+        const token = authorization.replace("bearer ", "");
         const userToken = jwt.verify(token.replace("eg1~", ""), process.env.JWT_SECRET);
 
         request.user = userToken;
     } catch (err) {
-        console.error(err);
+        console.log(err);
         return createError.createError(errors.NOT_ALLOWED.common, 403, reply);
     }
 }
