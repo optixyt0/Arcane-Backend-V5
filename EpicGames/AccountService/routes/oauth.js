@@ -1,45 +1,125 @@
+require("dotenv").config();
 const User = require("../../../global/database/models/user");
 const { v4: uuidv4 } = require("uuid");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 const errors = require("../../../global/responses/errors.json");
 const createError = require("../../../global/utils/error.js");
+const logger = require("../utils/logger.js");
 
 async function oauth(fastify, options) {
-    fastify.post('/account/api/oauth/token', (request, reply) => {
+    fastify.post('/account/api/oauth/token', async (request, reply) => {
         const { grant_type } = request.body;
+        let client_id;
+
+        try {
+            client_id = Buffer.from(req.headers["authorization"].split(" ")[1], 'base64').toString().split(":");
+
+            if (!client_id[1]) throw new Error("invalid client id");
+
+            client_id = client_id[0];
+        } catch {
+            client_id = "ec684b8c687f479fadea3cb2ad83f5c6";
+        }
         if (grant_type == "password") {
-            const { username, password } = request.body;
-            reply.status(200).send({
-                "access_token": "eg1~ArcaneV5",
+            const { username, password, includePerms, token_type } = request.body;
+
+            const user = await User.findOne({ "accountInfo.email": username });
+            if (!user) {
+                return createError.createError(errors.NOT_FOUND.account.not_found, 404, reply);
+            }
+            const verifiedPass = await bcrypt.compare(password, user.security.password);
+            if (!verifiedPass) {
+                return createError.createError(errors.NOT_ALLOWED.common, 403, reply);
+            }
+            const device_id = uuidv4();
+
+            const perms = [
+                {
+                    "resource": "launcher:download:live",
+                    "action": 2
+                },
+                {
+                    "resource": "catalog:shared:*",
+                    "action": 2
+                }
+            ]
+
+            const access_token = jwt.sign({
+                auth_method: grant_type,
+                account_id: user.accountInfo.id,
+                displayName: user.accountInfo.displayName,
+                device_id: device_id,
+                client_Id: client_id,
+                perms: perms
+            }, process.env.JWT_SECRET, { expiresIn: "2h" })
+
+            const refresh_token = jwt.sign({
+                auth_method: grant_type,
+                account_id: user.accountInfo.id,
+                device_id: device_id,
+                client_Id: client_id
+            }, process.env.JWT_SECRET, { expiresIn: "8h" })
+
+            let response = {
+                "access_token": `${token_type}~${access_token}` || access_token,
                 "expires_in": 7200,
                 "expires_at": new Date(Date.now() + 7200 * 1000).toISOString(),
                 "token_type": "bearer",
-                "refresh_token": "eg1~ArcaneV5",
+                "refresh_token": `eg1~${refresh_token}`,
                 "refresh_expires": 28800,
                 "refresh_expires_at": new Date(Date.now() + 28800 * 1000).toISOString(),
-                "account_id": "ArcaneV5",
-                "client_id": "ec684b8c687f479fadea3cb2ad83f5c6",
+                "account_id": user.accountInfo.id,
+                "client_id": client_id,
                 "internal_client": true,
                 "client_service": "fortnite",
-                "displayName": "ArcaneV5",
+                "displayName": user.accountInfo.displayName,
                 "app": "fortnite",
-                "in_app_id": "ArcaneV5",
-                "device_id": uuidv4()
-            })
+                "in_app_id": user.accountInfo.id,
+                "device_id": device_id
+            }
+            if (includePerms == "true") {
+                response = {
+                    ...response,
+                    perms: perms
+                }
+            }
+
+            reply.status(200).send(response)
         } else if (grant_type == "client_credentials") {
+            const { token_type } = request.body;
+            const perms = [
+                {
+                    "resource": "launcher:download:live",
+                    "action": 2
+                },
+                {
+                    "resource": "catalog:shared:*",
+                    "action": 2
+                }
+            ]
+
+            const access_token = jwt.sign({
+                auth_method: grant_type,
+                client_id: client_id,
+                perms: perms
+            }, process.env.JWT_SECRET, { expiresIn: "4h" })
+
             reply.status(200).send({
-                "access_token": "eg1~ArcaneV5",
+                "access_token": `${token_type}~${access_token}` || access_token,
                 "expires_in": 14400,
                 "expires_at": new Date(Date.now() + 14400 * 1000).toISOString(),
                 "token_type": "bearer",
-                "client_id": "ec684b8c687f479fadea3cb2ad83f5c6",
+                "client_id": client_id,
                 "internal_client": true,
                 "client_service": "prod-fn",
                 "product_id": "prod-fn",
                 "application_id": "fghi4567FNFBKFz3E4TROb0bmPS8h1GW"
             })
         } else if (grant_type == "exchange_code") {
+            return createError.createError(errors.BAD_REQUEST.grants.disabled, 400, reply);
+
             reply.status(200).send({
                 "access_token": "eg1~ArcaneV5",
                 "expires_in": 7200,
@@ -58,56 +138,45 @@ async function oauth(fastify, options) {
                 "product_id": "prod-fn",
                 "application_id": "fghi4567FNFBKFz3E4TROb0bmPS8h1GW"
             })
+        } else {
+            logger.backend(`Missing oauth/token grant type: ${grant_type}`);
+            return createError.createError(errors.NOT_FOUND.grants.not_found, 404, reply);
         }
     })
 
     fastify.get('/account/api/oauth/verify', (request, reply) => {
+        const { authorization } = request.headers;
         const { includePerms } = request.query;
-        const perms = [
-            {
-                "resource": "launcher:download:live",
-                "action": 2
-            },
-            {
-                "resource": "catalog:shared:*",
-                "action": 2
-            }
-        ]
-
-        if (!includePerms || includePerms == false) {
-            reply.status(200).send({
-                "token": "eg1~ArcaneV5",
-                "session_id": "ArcaneV5",
-                "token_type": "bearer",
-                "client_id": "ec684b8c687f479fadea3cb2ad83f5c6",
-                "internal_client": true,
-                "client_service": "launcher",
-                "account_id": "ArcaneV5",
-                "expires_in": 16462,
-                "expires_at": new Date(Date.now() + 16462 * 1000).toISOString(),
-                "auth_method": "exchange_code",
-                "display_name": "ArcaneV5",
-                "app": "launcher",
-                "in_app_id": "ArcaneV5"
-            })
-        } else {
-            reply.status(200).send({
-                "token": "eg1~ArcaneV5",
-                "session_id": "ArcaneV5",
-                "token_type": "bearer",
-                "client_id": "ec684b8c687f479fadea3cb2ad83f5c6",
-                "internal_client": true,
-                "client_service": "launcher",
-                "account_id": "ArcaneV5",
-                "expires_in": 16462,
-                "expires_at": new Date(Date.now() + 16462 * 1000).toISOString(),
-                "auth_method": "exchange_code",
-                "display_name": "ArcaneV5",
-                "app": "launcher",
-                "in_app_id": "ArcaneV5",
-                "perms": perms
-            })
+        if (!authorization) {
+            return createError.createError(errors.BAD_REQUEST.common, 400, reply);
         }
+
+        const token = authorization.replace("bearer ", "");
+        const userToken = jwt.verify(token.replace("eg1~", ""), process.env.JWT_SECRET);
+
+        let response = {
+            "token": token,
+            "session_id": uuidv4(),
+            "token_type": "bearer",
+            "client_id": userToken.client_id,
+            "internal_client": true,
+            "client_service": "launcher",
+            "account_id": userToken.account_id,
+            "expires_in": 16462,
+            "expires_at": new Date(Date.now() + 16462 * 1000).toISOString(),
+            "auth_method": userToken.auth_method,
+            "display_name": userToken.display_name,
+            "app": "launcher",
+            "in_app_id": userToken.account_id
+        }
+        if (includePerms == "true") {
+            response = {
+                ...response,
+                perms: userToken.perms
+            }
+        }
+
+        reply.status(200).send(response)
     })
 
     // Create an exchange route

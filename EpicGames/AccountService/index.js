@@ -29,9 +29,7 @@ fastify.setNotFoundHandler((request, reply) => {
 });
 
 fastify.setErrorHandler((error, request, reply) => {
-    if (reply.statusCode >= 400) {
-        console.error(error);
-    }
+    console.error(error);
     createError.createError(errors.SERVER_ERROR.common, 500, reply);
 });
 

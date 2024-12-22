@@ -4,6 +4,8 @@ const bcrypt = require("bcrypt");
 
 const errors = require("../../../global/responses/errors.json");
 const createError = require("../../../global/utils/error.js");
+const tokenVerify = require("../../../global/middlewares/tokenVerify.js");
+const verifyToken = require("../../../global/middlewares/tokenVerify.js");
 
 async function account(fastify, options) {
     // Category: Uncategorized
@@ -79,32 +81,15 @@ async function account(fastify, options) {
         reply.status(204).send();
     })
 
-    fastify.put('/account/api/public/account/:accountId', (request, reply) => {
+    fastify.put('/account/api/public/account/:accountId', { preHandler: tokenVerify }, async (request, reply) => {
+        const accountId = request.user.account_id;
+        const user = await User.findOne({ 'accountInfo.id': accountId });
+        if (!user) {
+            return createError.createError(errors.NOT_FOUND.account.not_found, 404, reply);
+        }
+
         reply.status(200).send({
-            "accountInfo": {
-                "id": "ArcaneV5",
-                "displayName": "ArcaneV5",
-                "email": "developer@arcane.dev",
-                "failedLoginAttempts": 0,
-                "lastLogin": "2023-05-02T16:51:59.221Z",
-                "numberOfDisplayNameChanges": 1,
-                "dateOfBirth": "2000-01-03",
-                "ageGroup": "ADULT",
-                "headless": false,
-                "country": "EN-GB",
-                "phoneNumber": "12345667890",
-                "company": "Arcane Backend",
-                "preferredLanguage": "en-gb",
-                "lastDisplayNameChange": "2022-09-10T08:07:47.361Z",
-                "canUpdateDisplayName": true,
-                "tfaEnabled": true,
-                "emailVerified": true,
-                "minorVerified": false,
-                "minorExpected": false,
-                "minorStatus": "NOT_MINOR",
-                "cabinedMode": false,
-                "hasHashedEmail": false
-            }
+            "accountInfo": user.accountInfo
         })
     })
 
@@ -223,19 +208,28 @@ async function account(fastify, options) {
     // Category: Lookup
 
     // Lookup by External Display Name
-    fastify.get('/account/api/public/account/lookup/externalAuth/:externalAuthType/displayName/:displayName', (request, reply) => {
-        reply.status(200).send([
-            {
-                "id": "ArcaneV5",
-                "displayName": "ArcaneV5",
-                "links": {},
-                "externalAuths": {}
+    fastify.get('/account/api/public/account/lookup/externalAuth/:externalAuthType/displayName/:displayName',
+        { preHandler: verifyToken },
+        async (request, reply) => {
+            const user = await User.findOne({ 'accountInfo.displayName': request.params.displayName });
+            if (!user) {
+                return createError.createError(errors.NOT_FOUND.account.not_found, 404, reply);
             }
-        ])
-    })
+
+            reply.status(200).send([
+                {
+                    "id": user.accountInfo.id,
+                    "displayName": user.accountInfo.displayName,
+                    "links": {},
+                    "externalAuths": {}
+                }
+            ])
+        })
 
     // Bulk Lookup by External Display Name
     fastify.post('/account/api/public/account/lookup/externalDisplayName', (request, reply) => {
+        return reply.status(200).send({});
+
         reply.status(200).send({
             "ArcaneV5": [
                 {
@@ -253,56 +247,54 @@ async function account(fastify, options) {
         reply.status(200).send({})
     })
 
-    fastify.get('/account/api/public/account/:accountId', (request, reply) => {
-        reply.status(200).send({
-            "id": "ArcaneV5",
-            "displayName": "ArcaneV5",
-            "email": "developer@arcane.dev",
-            "failedLoginAttempts": 0,
-            "lastLogin": "2023-05-02T16:51:59.221Z",
-            "numberOfDisplayNameChanges": 1,
-            "dateOfBirth": "2000-01-03",
-            "ageGroup": "ADULT",
-            "headless": false,
-            "country": "EN-GB",
-            "phoneNumber": "12345667890",
-            "company": "Arcane Backend",
-            "preferredLanguage": "en-gb",
-            "lastDisplayNameChange": "2022-09-10T08:07:47.361Z",
-            "canUpdateDisplayName": true,
-            "tfaEnabled": true,
-            "emailVerified": true,
-            "minorVerified": false,
-            "minorExpected": false,
-            "minorStatus": "NOT_MINOR",
-            "cabinedMode": false,
-            "hasHashedEmail": false
-        })
+    fastify.get('/account/api/public/account/:accountId', { preHandler: verifyToken }, async (request, reply) => {
+        const user = await User.findOne({ 'accountInfo.id': request.params.accountId });
+        if (!user) {
+            return createError.createError(errors.NOT_FOUND.account.not_found, 404, reply);
+        }
+        
+        reply.status(200).send(user.accountInfo)
     })
 
     // Lookup by account Ids 
-    fastify.get('/account/api/public/account', (request, reply) => {
+    fastify.get('/account/api/public/account', { preHandler: verifyToken }, async (request, reply) => {
+        const accountId = request.user.account_id;
+        const user = await User.findOne({ 'accountInfo.id': accountId });
+        if (!user) {
+            return createError.createError(errors.NOT_FOUND.account.not_found, 404, reply);
+        }
+        
         reply.status(200).send([
             {
-                "id": "ArcaneV5",
-                "displayName": "ArcaneV5",
+                "id": user.accountInfo.id,
+                "displayName": user.accountInfo.displayName,
                 "externalAuths": {}
             }
         ])
     })
 
-    fastify.get('/account/api/public/account/displayName/:displayName', (request, reply) => {
+    fastify.get('/account/api/public/account/displayName/:displayName', { preHandler: verifyToken }, async (request, reply) => {
+        const user = await User.findOne({ 'accountInfo.displayName': request.params.displayName });
+        if (!user) {
+            return createError.createError(errors.NOT_FOUND.account.not_found, 404, reply);
+        }
+        
         reply.status(200).send({
-            "id": "ArcaneV5",
-            "displayName": "ArcaneV5",
+            "id": user.accountInfo.id,
+            "displayName": user.accountInfo.displayName,
             "externalAuths": {}
         })
     })
 
-    fastify.get('/account/api/public/account/email/:email', (request, reply) => {
+    fastify.get('/account/api/public/account/email/:email', { preHandler: verifyToken }, async (request, reply) => {
+        const user = await User.findOne({ 'accountInfo.email': request.params.email });
+        if (!user) {
+            return createError.createError(errors.NOT_FOUND.account.not_found, 404, reply);
+        }
+        
         reply.status(200).send({
-            "id": "ArcaneV5",
-            "displayName": "ArcaneV5",
+            "id": user.accountInfo.id,
+            "displayName": user.accountInfo.displayName,
             "externalAuths": {}
         })
     })
