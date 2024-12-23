@@ -67,6 +67,10 @@ function getRandomElement(array) {
     return array[Math.floor(Math.random() * array.length)];
 }
 
+function getRandomNumber() {
+    return Math.floor(Math.random() * 6);
+}
+
 module.exports = {
     GetVersionInfo,
     getRandomElement
