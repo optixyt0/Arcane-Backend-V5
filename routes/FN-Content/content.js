@@ -16,7 +16,7 @@ async function content(fastify, options) {
 
         // random news
         const images = [
-            "https://cdn2.unrealengine.com/s25-lobby-4k-4096x2048-4a832928e11f.jpg",
+            ["https://cdn2.unrealengine.com/s25-lobby-4k-4096x2048-4a832928e11f.jpg", 1], // i hope this works 🙏
             "https://cdn2.unrealengine.com/t-bp20-lobby-2048x1024-d89eb522746c.png",
             "https://cdn2.unrealengine.com/s21-lobby-background-2048x1024-2e7112b25dc3.jpg",
             "https://cdn2.unrealengine.com/t-bp23-lobby-2048x1024-2048x1024-26f2c1b27f63.png",
@@ -48,15 +48,7 @@ async function content(fastify, options) {
             functions.getRandomElement(images)
         ]
 
-        const randomTitles = [
-            functions.getRandomElement(titles),
-            functions.getRandomElement(titles)
-        ]
-
-        const randomDescs = [
-            functions.getRandomElement(descriptions),
-            functions.getRandomElement(descriptions)
-        ]
+        
 
         let newsv1 = [];
         for (let i = 0; i < 2; i++) {
