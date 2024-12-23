@@ -59,6 +59,124 @@ async function mcp(fastify, options) {
         });
     })
 
+    fastify.post('/fortnite/api/game/v2/profile/:accountId/client/EquipBattleRoyaleCustomization', async (request, reply) => {
+        const profiles = await Profile.findOne({ accountId: request.params.accountId });
+        let profile = profiles.profiles[request.query.profileId];
+        const memory = functions.GetVersionInfo(request);
+
+        let MultiUpdate = [];
+        let ApplyProfileChanges = [];
+        let BaseRevision = profile.rvn;
+        let ProfileRevisionCheck = (memory.build >= 12.20) ? profile.commandRevision : profile.rvn;
+        let QueryRevision = request.query.rvn || -1;
+
+        let activeLoadout = profile.stats.attributes.loadouts[profile.stats.attributes.active_loadout_index];
+        let templateId = profile.items[request.body.itemToSlot] ? profile.items[request.body.itemToSlot].templateId : request.body.itemToSlot;
+
+        if (request.body.slotname == "Dance") {
+            // ill do this later
+        } else if (request.body.slotname == "ItemWrap") {
+            // i have no way to test this with my current profiles so i wont be doing this for now
+        } else {
+            profile.stats.attributes[(`favorite_${request.body.slotName}`).toLowerCase()] = request.body.itemToSlot;
+            profile.items[activeLoadout].attributes.locker_slots_data.slots[request.body.slotName].items = [templateId];
+
+            ApplyProfileChanges.push({
+                "changeType": "statModified",
+                "name": (`favorite_${request.body.slotName}`).toLowerCase(),
+                "value": profile.stats.attributes[(`favorite_${request.body.slotName}`).toLowerCase()]
+            });
+        }
+
+        if (ApplyProfileChanges.length > 0) {
+            profile.rvn += 1;
+            profile.commandRevision += 1;
+            profile.updated = new Date().toISOString();
+
+            await profiles.updateOne({ $set: { [`profiles.${request.query.profileId}`]: profile } });
+        }
+
+        if (QueryRevision != ProfileRevisionCheck) {
+            ApplyProfileChanges = [{
+                "changeType": "fullProfileUpdate",
+                "profile": profile
+            }];
+        }
+
+        reply.status(200).send({
+            profileRevision: profile.rvn || 0,
+            profileId: request.query.profileId,
+            profileChangesBaseRevision: BaseRevision,
+            profileChanges: ApplyProfileChanges,
+            profileCommandRevision: profile.commandRevision || 0,
+            serverTime: new Date().toISOString(),
+            multiUpdate: MultiUpdate,
+            responseVersion: 1
+        });
+    })
+
+    fastify.post('/fortnite/api/game/v2/profile/:accountId/client/SetBattleRoyaleBanner', async (request, reply) => {
+        const profiles = await Profile.findOne({ accountId: request.params.accountId });
+        let profile = profiles.profiles[request.query.profileId];
+        const memory = functions.GetVersionInfo(request);
+
+        let MultiUpdate = [];
+        let ApplyProfileChanges = [];
+        let BaseRevision = profile.rvn;
+        let ProfileRevisionCheck = (memory.build >= 12.20) ? profile.commandRevision : profile.rvn;
+        let QueryRevision = request.query.rvn || -1;
+
+        let activeLoadout = profile.stats.attributes.loadouts[profile.stats.attributes.active_loadout_index];
+
+        profile.stats.attributes.banner_icon = request.body.homebaseBannerIconId;
+        profile.stats.attributes.banner_color = request.body.homebaseBannerColorId;
+
+        profile.items[activeLoadout].attributes.banner_icon_template = request.body.homebaseBannerIconId;
+        profile.items[activeLoadout].attributes.banner_color_template = request.body.homebaseBannerColorId;
+
+        ApplyProfileChanges.push({
+            "changeType": "itemAttrChanged",
+            "name": "banner_icon",
+            "itemId": activeLoadout,
+            "attributeName": "banner_icon_template",
+            "attributeValue": profile.items[activeLoadout].attributes.banner_icon_template
+        });
+
+        ApplyProfileChanges.push({
+            "changeType": "itemAttrChanged",
+            "name": "banner_color",
+            "itemId": activeLoadout,
+            "attributeName": "banner_color_template",
+            "attributeValue": profile.items[activeLoadout].attributes.banner_color_template
+        });
+
+        if (ApplyProfileChanges.length > 0) {
+            profile.rvn += 1;
+            profile.commandRevision += 1;
+            profile.updated = new Date().toISOString();
+
+            await profiles.updateOne({ $set: { [`profiles.${request.query.profileId}`]: profile } });
+        }
+
+        if (QueryRevision != ProfileRevisionCheck) {
+            ApplyProfileChanges = [{
+                "changeType": "fullProfileUpdate",
+                "profile": profile
+            }];
+        }
+
+        reply.status(200).send({
+            profileRevision: profile.rvn || 0,
+            profileId: request.query.profileId,
+            profileChangesBaseRevision: BaseRevision,
+            profileChanges: ApplyProfileChanges,
+            profileCommandRevision: profile.commandRevision || 0,
+            serverTime: new Date().toISOString(),
+            multiUpdate: MultiUpdate,
+            responseVersion: 1
+        });
+    })
+
     // idk how to do this
     fastify.post('/fortnite/api/game/v2/profile/:accountId/client/RefreshExpeditions', async (request, reply) => {
         const profiles = await Profile.findOne({ accountId: request.params.accountId });

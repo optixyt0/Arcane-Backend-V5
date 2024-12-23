@@ -1,4 +1,10 @@
-## v0.03
+## v0.04:
+### kinda big change!
+- Made the dynamicbackgrounds work on chapter 2 onwards, c1 s1 and 2 tested
+- equip banners from locker (for some reason you have to restart game)
+- equip main stuff in locker (emotes and wraps dont work right now)
+
+## v0.03:
 - Added STW World Info!
 
 ## v0.02:
