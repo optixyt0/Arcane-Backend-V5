@@ -16,7 +16,7 @@ async function content(fastify, options) {
 
         // random news
         const images = [
-            ["https://cdn2.unrealengine.com/s25-lobby-4k-4096x2048-4a832928e11f.jpg", 1], // i hope this works 🙏
+            "https://cdn2.unrealengine.com/s25-lobby-4k-4096x2048-4a832928e11f.jpg", // i hope this works 🙏
             "https://cdn2.unrealengine.com/t-bp20-lobby-2048x1024-d89eb522746c.png",
             "https://cdn2.unrealengine.com/s21-lobby-background-2048x1024-2e7112b25dc3.jpg",
             "https://cdn2.unrealengine.com/t-bp23-lobby-2048x1024-2048x1024-26f2c1b27f63.png",
@@ -27,20 +27,20 @@ async function content(fastify, options) {
             "https://cdn2.unrealengine.com/Fortnite/fortnite-game/battleroyalenews/v42/BR04_MOTD_Shield-1024x512-75eacc957ecc88e76693143b6256ba06159efb76.jpg"
         ]
         const titles = [
-            "Keep Your Account Secure",
-            "ArcaneV5, Powering better multiplayer experiences than before!",
-            "Welcome to Arcane Backend",
-            "RetroNite is free", // thanks theRevisitor
-            "Thanks for using ArcaneV5",
-            "Thanks for choosing Arcane Backend!"
+            ["Keep Your Account Secure", 1],
+            ["ArcaneV5, Powering better multiplayer experiences than before!", 2],
+            ["Welcome to Arcane Backend", 3],
+            ["RetroNite is free", 4], // thanks theRevisitor
+            ["Thanks for using ArcaneV5", 5],
+            ["Thanks for choosing Arcane Backend!", 6]
         ]
         const descriptions = [
-            "Avoid scam sites offering free V-Bucks. Epic will never ask for your password. Enable Two-Factor Authentication to help stay secure!",
-            "Keep Your Account Secure",
-            "Welcome to Arcane Backend \n We hope you have an amazing experience!",
-            "RetroNite is free", // thanks theRevisitor
-            "Thanks for using ArcaneV5 \n We hope you have an amazing experience!",
-            "Thanks for choosing Arcane Backend! \n We hope you have an amazing experience!"
+            ["Avoid scam sites offering free V-Bucks. Epic will never ask for your password. Enable Two-Factor Authentication to help stay secure!", 1],
+            ["Keep Your Account Secure", 2],
+            ["Welcome to Arcane Backend \n We hope you have an amazing experience!", 3],
+            ["RetroNite is free", 4], // thanks theRevisitor
+            ["Thanks for using ArcaneV5 \n We hope you have an amazing experience!", 5],
+            ["Thanks for choosing Arcane Backend! \n We hope you have an amazing experience!", 6]
         ]
 
         const randomImages = [
