@@ -1,3 +1,6 @@
+## v0.03
+- Added STW World Info!
+
 ## v0.02:
 - Added Profiles!
 - Added a fallback MCP route (most it can do is queryprofile!)

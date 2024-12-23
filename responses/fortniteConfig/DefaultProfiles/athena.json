@@ -452,16 +452,16 @@
   },
   "stats": {
     "attributes": {
-      "season_match_boost": 0,
+      "season_match_boost": 10,
       "loadouts": [
         "sandbox_loadout",
         "arcane0-loadout"
       ],
       "rested_xp_overflow": 0,
-      "mfa_reward_claimed": true,
+      "mfa_reward_claimed": false,
       "quest_manager": {},
-      "book_level": 0,
-      "season_num": 8,
+      "book_level": 1,
+      "season_num": 2,
       "season_update": 1,
       "book_xp": 1,
       "permissions": [],
@@ -474,7 +474,7 @@
       "xp_overflow": 0,
       "rested_xp": 0,
       "rested_xp_mult": 0,
-      "accountLevel": 0,
+      "accountLevel": 1,
       "competitive_identity": {},
       "inventory_limit_bonus": 0,
       "last_applied_loadout": "sandbox_loadout",

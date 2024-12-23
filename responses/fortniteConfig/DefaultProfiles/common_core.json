@@ -34,7 +34,7 @@
       "attributes": {
         "platform": "EpicPC"
       },
-      "quantity": 0
+      "quantity": 200
     },
     "Token:FounderChatUnlock": {
       "templateId": "Token:FounderChatUnlock",
@@ -2025,8 +2025,8 @@
       "permissions": [],
       "undo_timeout": "min",
       "monthly_purchases": {},
-      "allowed_to_send_gifts": true,
-      "mfa_enabled": true,
+      "allowed_to_send_gifts": false,
+      "mfa_enabled": false,
       "allowed_to_receive_gifts": true,
       "gift_history": {}
     }
