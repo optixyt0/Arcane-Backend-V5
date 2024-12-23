@@ -47,7 +47,13 @@ async function content(fastify, options) {
             functions.getRandomElement(images),
             functions.getRandomElement(images)
         ]
+        
+        const randomCollection = [
+            functions.getRandomElement(titles)
+            functions.getRandomElement(titles)
+        ] // will fix tmrw
 
+        
         
 
         let newsv1 = [];
