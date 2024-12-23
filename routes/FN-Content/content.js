@@ -49,11 +49,13 @@ async function content(fastify, options) {
         ]
         
         const randomCollection = [
-            functions.getRandomElement(titles)
-            functions.getRandomElement(titles)
-        ] // will fix tmrw
+            functions.getRandomNumber()
+            functions.getRandomNumber()
+        ]
 
-        
+        if (randomCollection[1].includes(1)) {
+            
+            } // i will fix more tmrw
         
 
         let newsv1 = [];
