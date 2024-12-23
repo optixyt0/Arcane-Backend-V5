@@ -74,7 +74,15 @@ async function mcp(fastify, options) {
         let templateId = profile.items[request.body.itemToSlot] ? profile.items[request.body.itemToSlot].templateId : request.body.itemToSlot;
 
         if (request.body.slotname == "Dance") {
-            // ill do this later
+            // idek why this isnt working
+            profile.stats.attributes.favorite_dance[request.body.indexWithinSlot] = request.body.itemToSlot;
+            profile.items[activeLoadout].attributes.locker_slots_data.slots.Dance.items[request.body.indexWithinSlot] = templateId;
+
+            ApplyProfileChanges.push({
+                "changeType": "itemAttrChanged",
+                "name": "favorite_dance",
+                "value": profile.stats.attributes["favorite_dance"]
+            });
         } else if (request.body.slotname == "ItemWrap") {
             // i have no way to test this with my current profiles so i wont be doing this for now
         } else {
@@ -135,19 +143,15 @@ async function mcp(fastify, options) {
         profile.items[activeLoadout].attributes.banner_color_template = request.body.homebaseBannerColorId;
 
         ApplyProfileChanges.push({
-            "changeType": "itemAttrChanged",
+            "changeType": "statModified",
             "name": "banner_icon",
-            "itemId": activeLoadout,
-            "attributeName": "banner_icon_template",
-            "attributeValue": profile.items[activeLoadout].attributes.banner_icon_template
+            "value": profile.items[activeLoadout].attributes.banner_icon_template
         });
 
         ApplyProfileChanges.push({
-            "changeType": "itemAttrChanged",
+            "changeType": "statModified",
             "name": "banner_color",
-            "itemId": activeLoadout,
-            "attributeName": "banner_color_template",
-            "attributeValue": profile.items[activeLoadout].attributes.banner_color_template
+            "value": profile.items[activeLoadout].attributes.banner_color_template
         });
 
         if (ApplyProfileChanges.length > 0) {

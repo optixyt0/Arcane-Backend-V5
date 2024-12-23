@@ -1,3 +1,7 @@
+## v0.05:
+- fixed the problem with banners having to restart game to see the change
+- made equiping emotes (doesent work)
+
 ## v0.04:
 ### kinda big change!
 - Made the dynamicbackgrounds work on chapter 2 onwards, c1 s1 and 2 tested
