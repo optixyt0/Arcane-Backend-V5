@@ -73,5 +73,6 @@ function getRandomNumber() {
 
 module.exports = {
     GetVersionInfo,
-    getRandomElement
+    getRandomElement,
+    genRandomNumber
 }
