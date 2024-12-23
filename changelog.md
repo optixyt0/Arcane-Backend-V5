@@ -1,3 +1,6 @@
+## v0.06:
+- Dynamic news!
+
 ## v0.05:
 - fixed the problem with banners having to restart game to see the change
 - made equiping emotes (doesent work)

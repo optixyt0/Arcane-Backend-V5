@@ -63,6 +63,11 @@ function GetVersionInfo(request) {
     return memory;
 }
 
+function getRandomElement(array) {
+    return array[Math.floor(Math.random() * array.length)];
+}
+
 module.exports = {
-    GetVersionInfo
+    GetVersionInfo,
+    getRandomElement
 }
